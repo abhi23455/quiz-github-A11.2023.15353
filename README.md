@@ -1,4 +1,4 @@
-﻿# Quiz GitHub - Poliklinik App
+# Quiz GitHub - Poliklinik App
 
 ## Identitas
 
