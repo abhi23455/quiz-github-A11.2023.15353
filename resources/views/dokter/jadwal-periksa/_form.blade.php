@@ -42,20 +42,6 @@
     </div>
 </div>
 
-<div class="form-control mb-6">
-    <label for="status" class="label pb-1">
-        <span class="text-sm font-semibold text-gray-700">Status <span class="text-red-500">*</span></span>
-    </label>
-    <select id="status" name="status"
-        class="select select-bordered w-full rounded-lg text-sm @error('status') select-error @enderror" required>
-        <option value="1" {{ (string) old('status', isset($jadwal) ? (int) $jadwal->status : '1') === '1' ? 'selected' : '' }}>Aktif</option>
-        <option value="0" {{ (string) old('status', isset($jadwal) ? (int) $jadwal->status : '1') === '0' ? 'selected' : '' }}>Tidak Aktif</option>
-    </select>
-    @error('status')
-    <label class="label pt-1"><span class="label-text-alt text-red-500">{{ $message }}</span></label>
-    @enderror
-</div>
-
 <div class="flex gap-3">
     <button type="submit"
         class="flex items-center gap-2 px-6 py-2.5 bg-[#2d4499] hover:bg-[#1e2d6b] text-white rounded-lg text-sm font-semibold transition">

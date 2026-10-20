@@ -23,24 +23,25 @@ class JadwalPeriksaCrudTest extends TestCase
             'hari' => 'Selasa',
             'jam_mulai' => '09:00',
             'jam_selesai' => '12:00',
-            'status' => true,
         ]);
 
         $this->actingAs($dokter)
             ->get(route('jadwal-periksa.index'))
             ->assertOk()
+            ->assertSeeInOrder(['ID', 'Hari', 'Jam Mulai', 'Jam Selesai', 'Aksi'])
+            ->assertDontSee('Status')
             ->assertDontSee('Selasa');
 
         $this->post(route('jadwal-periksa.store'), [
             'hari' => 'Senin',
             'jam_mulai' => '08:00',
             'jam_selesai' => '12:00',
-            'status' => '1',
         ])->assertRedirect(route('jadwal-periksa.index'));
 
         $jadwal = JadwalPeriksa::where('id_dokter', $dokterId)->firstOrFail();
         $this->get(route('jadwal-periksa.index'))
             ->assertSee('Senin')
+            ->assertSee((string) $jadwal->getKey())
             ->assertDontSee('Selasa');
         $this->assertDatabaseHas('jadwal_periksa', [
             'id' => $jadwal->getKey(),
@@ -48,7 +49,6 @@ class JadwalPeriksaCrudTest extends TestCase
             'hari' => 'Senin',
             'jam_mulai' => '08:00',
             'jam_selesai' => '12:00',
-            'status' => 1,
         ]);
 
         $jadwalId = $jadwal->getKey();
@@ -60,7 +60,6 @@ class JadwalPeriksaCrudTest extends TestCase
             'hari' => 'Rabu',
             'jam_mulai' => '10:00',
             'jam_selesai' => '13:00',
-            'status' => '0',
         ])->assertRedirect(route('jadwal-periksa.index'));
 
         $this->assertDatabaseHas('jadwal_periksa', [
@@ -68,7 +67,6 @@ class JadwalPeriksaCrudTest extends TestCase
             'hari' => 'Rabu',
             'jam_mulai' => '10:00',
             'jam_selesai' => '13:00',
-            'status' => 0,
         ]);
 
         $jadwalLainId = $jadwalDokterLain->getKey();
@@ -77,7 +75,6 @@ class JadwalPeriksaCrudTest extends TestCase
             'hari' => 'Kamis',
             'jam_mulai' => '10:00',
             'jam_selesai' => '13:00',
-            'status' => '1',
         ])->assertNotFound();
         $this->delete(route('jadwal-periksa.destroy', $jadwalLainId))->assertNotFound();
 
@@ -96,9 +93,8 @@ class JadwalPeriksaCrudTest extends TestCase
                 'hari' => 'Funday',
                 'jam_mulai' => '12:00',
                 'jam_selesai' => '10:00',
-                'status' => 'invalid',
             ])
-            ->assertSessionHasErrors(['hari', 'jam_selesai', 'status']);
+            ->assertSessionHasErrors(['hari', 'jam_selesai']);
 
         $this->assertDatabaseCount('jadwal_periksa', 0);
     }

@@ -14,24 +14,20 @@
                 <table class="table table-zebra w-full">
                     <thead class="bg-slate-100 text-slate-500 text-xs uppercase tracking-wider">
                         <tr>
+                            <th class="px-6 py-4">ID</th>
                             <th class="px-6 py-4">Hari</th>
                             <th class="px-6 py-4">Jam Mulai</th>
                             <th class="px-6 py-4">Jam Selesai</th>
-                            <th class="px-6 py-4">Status</th>
                             <th class="px-6 py-4 text-right">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($jadwals as $jadwal)
                         <tr class="hover:bg-slate-50 transition">
+                            <td class="px-6 py-4 text-slate-500">{{ $jadwal->id }}</td>
                             <td class="px-6 py-4 font-semibold text-slate-800">{{ $jadwal->hari }}</td>
                             <td class="px-6 py-4 text-slate-500">{{ substr($jadwal->jam_mulai, 0, 5) }}</td>
                             <td class="px-6 py-4 text-slate-500">{{ substr($jadwal->jam_selesai, 0, 5) }}</td>
-                            <td class="px-6 py-4">
-                                <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $jadwal->status ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600' }}">
-                                    {{ $jadwal->status ? 'Aktif' : 'Tidak Aktif' }}
-                                </span>
-                            </td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-2">
                                     <a href="{{ route('jadwal-periksa.edit', $jadwal->id) }}"

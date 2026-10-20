@@ -82,7 +82,6 @@ class JadwalPeriksaController extends Controller
             'hari' => ['required', 'in:' . implode(',', self::HARI)],
             'jam_mulai' => ['required', 'date_format:H:i'],
             'jam_selesai' => ['required', 'date_format:H:i', 'after:jam_mulai'],
-            'status' => ['required', 'boolean'],
         ];
     }
 
