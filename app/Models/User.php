@@ -13,6 +13,33 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    protected static function booted(): void
+    {
+        static::creating(function (User $user) {
+            if ($user->role === 'pasien' && blank($user->no_rm)) {
+                $user->no_rm = self::generateNoRm();
+            }
+        });
+    }
+
+    public static function generateNoRm(): string
+    {
+        $prefix = now()->format('Ym');
+        $lastNumber = static::query()
+            ->where('role', 'pasien')
+            ->where('no_rm', 'like', $prefix . '-%')
+            ->pluck('no_rm')
+            ->reduce(function (int $highest, ?string $noRm) use ($prefix): int {
+                if (preg_match('/^' . preg_quote($prefix, '/') . '-(\d+)$/', (string) $noRm, $matches)) {
+                    return max($highest, (int) $matches[1]);
+                }
+
+                return $highest;
+            }, 0);
+
+        return $prefix . '-' . str_pad((string) ($lastNumber + 1), 3, '0', STR_PAD_LEFT);
+    }
+
     /**
      * The attributes that are mass assignable.
      *
