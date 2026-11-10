@@ -21,11 +21,11 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.dashboard')->with('success', 'Login berhasil! Selamat datang.');
             } else if ($user->role === 'dokter') {
-                return redirect()->route('dokter.dashboard');
+                return redirect()->route('dokter.dashboard')->with('success', 'Login berhasil! Selamat datang.');
             } else {
-                return redirect()->route('pasien.dashboard');
+                return redirect()->route('pasien.dashboard')->with('success', 'Login berhasil! Selamat datang.');
             }
         }
 
